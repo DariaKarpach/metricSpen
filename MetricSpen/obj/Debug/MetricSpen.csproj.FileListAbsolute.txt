@@ -1,0 +1,6 @@
+D:\БГУИР\2 курс 1 семестр\МСиСвИнфТ\MetricSpen\MetricSpen\bin\Debug\MetricSpen.exe.config
+D:\БГУИР\2 курс 1 семестр\МСиСвИнфТ\MetricSpen\MetricSpen\bin\Debug\MetricSpen.exe
+D:\БГУИР\2 курс 1 семестр\МСиСвИнфТ\MetricSpen\MetricSpen\bin\Debug\MetricSpen.pdb
+D:\БГУИР\2 курс 1 семестр\МСиСвИнфТ\MetricSpen\MetricSpen\obj\Debug\MetricSpen.csprojResolveAssemblyReference.cache
+D:\БГУИР\2 курс 1 семестр\МСиСвИнфТ\MetricSpen\MetricSpen\obj\Debug\MetricSpen.exe
+D:\БГУИР\2 курс 1 семестр\МСиСвИнфТ\MetricSpen\MetricSpen\obj\Debug\MetricSpen.pdb

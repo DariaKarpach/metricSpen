@@ -1,0 +1,175 @@
+#define _CRT_SECURE_NO_WARNINGS 
+#include "stdafx.h" 
+#include "stdlib.h" 
+#include "stdio.h" 
+#include "string.h"
+
+
+//char *readExpressionFromfile( void ); 
+//void createExpressionTree( _binaryTree **node, char *expression ); 
+//void createRPN( _binaryTree *node, char *rpn_expression, int *counter ); 
+
+int i, j ;
+char k;
+
+char *readExpressionFromfile( void ){ 
+int number_of_symbols = 100; 
+FILE *file_with_expression = fopen( "expression.txt","rt" ); 
+char *expression_string = ( char * ) malloc( number_of_symbols * sizeof( char ) ); 
+int counter = 0; 
+while ( feof( file_with_expression ) == 0){ 
+if ( counter < number_of_symbols ){ 
+fscanf( file_with_expression, "%c", &( expression_string [ counter ++] ) ); 
+} 
+else 
+{ 
+ number_of_symbols *= 2; 
+char * expression_string = ( char * ) malloc( number_of_symbols * sizeof( char ) ); 
+} 
+} 
+
+fclose( file_with_expression ); 
+ expression_string [-- counter ] = char( 0 ); 
+ expression_string = ( char * ) realloc( expression_string , strlen( expression_string ) + 1 ); 
+
+
+return expression_string ; 
+
+} 
+void createExpressionTree( _binaryTree **node, char *expression ){ 
+
+int length_of_expression = strlen( expression ); 
+
+if ( length_of_expression != 1){ 
+
+int priority = 0;	
+int boundary_between_parts = 0; 
+
+
+for ( int counter = 0; counter < length_of_expression; counter ++ ){ 
+if ( expression[counter] == '('){ 
+ priority ++; 
+} 
+if ( expression[ counter ] == ')'){ 
+ priority --; 
+} 
+if ( priority == 0){ 
+if ( ( expression [ counter ] =='+') || ( expression [ counter ] =='-') ){ 
+ boundary_between_parts = counter; 
+} 
+} 
+} 
+
+if ( boundary_between_parts == 0){ 
+for ( int counter = 0; counter < length_of_expression; counter ++ ){ 
+if ( expression [ counter ] == '('){ 
+priority++; 
+} 
+if ( expression[ counter ] == ')'){ 
+priority--; 
+} 
+if ( priority == 0){ 
+if ( ( expression [ counter ] =='*') || ( expression [ counter ] =='/') ){ 
+ boundary_between_parts = counter; 
+} 
+} 
+} 
+} 
+
+
+if ( boundary_between_parts == 0){ 
+for ( int counter = 0; counter < length_of_expression; counter++ ){ 
+if ( expression [ counter ] == '('){ 
+ priority ++; 
+} 
+if ( expression [ counter ] == ')'){ 
+ priority --; 
+} 
+if ( priority == 0){ 
+if ( ( expression [ counter ] =='^') ){ 
+ boundary_between_parts = counter; 
+break; 
+} 
+} 
+} 
+} 
+
+char *left_subexpression = ( char * ) malloc( ( length_of_expression + 1)* sizeof( char ) ); 
+char *right_subexpression = ( char * ) malloc( ( length_of_expression + 1)* sizeof( char ) ); 
+int length_of_left_subexpression = boundary_between_parts; 
+int begin_of_left_subexpression = 0; 
+
+if (( expression[0] == '(') && ( expression[ length_of_left_subexpression -1] == ')')) { 
+ begin_of_left_subexpression ++; 
+ length_of_left_subexpression --; 
+} 
+
+int i, counter; 
+for ( i = 0, counter = begin_of_left_subexpression; counter < length_of_left_subexpression; ){ 
+ left_subexpression[i++] = expression[ counter ++]; 
+} 
+ left_subexpression[i] = char(0); 
+ left_subexpression = ( char * ) realloc( left_subexpression, strlen(left_subexpression)+1 ); 
+
+
+int start_of_right_subexpression = boundary_between_parts; 
+if (( expression[ start_of_right_subexpression + 1] == '(' ) && ( expression[ length_of_expression -1 ] == ')' ) ){ 
+ start_of_right_subexpression++; 
+ length_of_expression--; 
+} 
+
+for ( i = 0, counter = start_of_right_subexpression + 1; counter < length_of_expression; i) { 
+ right_subexpression[ i ++] = expression[ counter ++]; 
+} 
+ right_subexpression[ i ] = char(0); 
+ right_subexpression = ( char * ) realloc( right_subexpression, strlen( right_subexpression )+1 ); 
+
+(*node) = ( _binaryTree *) malloc( sizeof( _binaryTree ) ); 
+(*node)->symbol = expression[ boundary_between_parts]; 
+(*node)->left_node = NULL; 
+(*node)->right_node = NULL; 
+
+//printf("%s\n", left_subexpression); 
+createExpressionTree( &((*node)->left_node), left_subexpression ); 
+//printf("%s\n", right_subexpression); 
+createExpressionTree( &((*node)->right_node), right_subexpression );	
+
+} 
+else 
+{ 
+(*node) = ( _binaryTree *) malloc( sizeof( _binaryTree ) ); 
+(*node)->symbol = expression[0]; 
+(*node)->left_node = NULL; 
+(*node)->right_node = NULL; 
+
+} 
+
+
+} 
+void createRPN(_binaryTree *node, char *rpn_expression, int *counter ) 
+{ 
+if ( node != NULL){ 
+createRPN(node->left_node, rpn_expression, counter ); 
+createRPN(node->right_node, rpn_expression, counter ); 
+rpn_expression[(* counter )++] = node->symbol; 
+} 
+
+} 
+
+void main(void) 
+
+const float PI = 3.14; 
+char *expression = readExpressionFromfile(); 
+printf( "Infix:\n%s\n\n", expression ); 
+
+_binaryTree *root; 
+createExpressionTree( &root, expression ); 
+char *rpn_expression = ( char *) malloc( (strlen( expression ) + 1)* sizeof( char ) ); 
+int counter = 0; 
+createRPN( root, rpn_expression, &counter); 
+rpn_expression[ counter] = char(0); 
+printf( "Postfix:\n%s\n\n", rpn_expression ); 
+
+system( "pause" ); 
+
+}
